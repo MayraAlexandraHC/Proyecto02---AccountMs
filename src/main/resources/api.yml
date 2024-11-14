@@ -1,0 +1,131 @@
+openapi: 3.0.0
+info:
+  title: AccountMs
+  version: 1.0.0
+  description: Gestión de cuentas bancarias
+paths:
+  /cuentas:
+    post:
+      summary: Crear una cuenta para un cliente
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CuentaBancaria'
+      responses:
+        '201':
+          description: Cuenta creada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CuentaBancaria'
+    get:
+      summary: Listar todas las cuentas bancarias
+      responses:
+        '200':
+          description: Obtener cuentas bancarias
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CuentaBancaria'
+  /cuentas/{id}:
+    get:
+      summary: Obtener detalles de una cuenta por su ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Información cuenta bancaria
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CuentaBancaria'
+    delete:
+      summary: Eliminar una cuenta bancaria
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Cuenta eliminada exitosamente
+  /cuentas/{cuentaId}/depositar:
+    put:
+      summary: Realizar un depósito en una cuenta bancaria
+      parameters:
+        - name: cuentaId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                monto:
+                  type: number
+                  format: double
+      responses:
+        '200':
+          description: Depósito realizado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CuentaBancaria'
+  /cuentas/{cuentaId}/retirar:
+    put:
+      summary: Realizar un retiro de una cuenta bancaria
+      parameters:
+        - name: cuentaId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                monto:
+                  type: number
+                  format: double
+      responses:
+        '200':
+          description: Retiro realizado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CuentaBancaria'
+components:
+  schemas:
+    CuentaBancaria:
+      type: object
+      properties:
+        id:
+          type: string
+        numeroCuenta:
+          type: string
+        saldo:
+          type: number
+          format: double
+        tipoCuenta:
+          type: string
+          enum:
+            - AHORROS
+            - CORRIENTE
+        clienteId:
+          type: string
